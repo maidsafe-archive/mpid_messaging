@@ -1,0 +1,13 @@
+[package]
+authors = ["MaidSafe Developers <dev@maidsafe.net>"]
+description = "Types used by SAFE Vaults and SAFE Clients to send and receive messages."
+documentation = "http://maidsafe.net/mpid_messaging/latest"
+homepage = "http://maidsafe.net"
+license = "GPL-3.0"
+name = "mpid_messaging"
+readme = "README.md"
+repository = "https://github.com/maidsafe/mpid_messaging"
+version = "0.0.1"
+
+[dependencies]
+rustc-serialize = "~0.3.16"
