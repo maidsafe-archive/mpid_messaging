@@ -75,9 +75,9 @@ pub struct MpidMessage {
 
 /// Wrapper of a notification or a full message
 #[derive(RustcDecodable, RustcEncodable)]
-pub struct MpidMessageWrapper {
+pub enum MpidMessageWrapper {
     /// Wrapping a notification
-    pub mpid_header: Option<MpidHeader>,
+    MpidHeader(MpidHeader),
     /// Wrapping a full message
-    pub mpid_message: Option<MpidMessage>,
+    MpidMessage(MpidMessage),
 }
