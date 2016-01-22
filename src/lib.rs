@@ -39,6 +39,45 @@
          missing_debug_implementations)]
 
 extern crate rustc_serialize;
+extern crate xor_name;
 
+use xor_name::XorName;
+
+/// A simple struct holding basic info of the message
 #[derive(RustcDecodable, RustcEncodable)]
-struct MpidHeader;
+pub struct Header {
+    /// Sender's identification
+    pub sender: XorName,
+    /// Receiver's identification
+    pub receiver: XorName,
+    /// Subject field holding generic info of the message
+    pub subject_field: Vec<u8>,
+}
+
+
+/// To be used as a notification to the receiver
+#[derive(RustcDecodable, RustcEncodable)]
+pub struct MpidHeader {
+    /// Header part of the message
+    pub msg_header: Header,
+    /// Hash name of the mpid_message that being stored in MpidManager
+    pub msg_link: XorName,
+}
+
+/// Full message sending/fetching to/from the Network
+#[derive(RustcDecodable, RustcEncodable)]
+pub struct MpidMessage {
+    /// Header part of the message
+    pub msg_header: Header,
+    /// Content part of the message
+    pub msg_content: Vec<u8>,
+}
+
+/// Wrapper of a notification or a full message
+#[derive(RustcDecodable, RustcEncodable)]
+pub struct MpidMessageWrapper {
+    /// Wrapping a notification
+    pub mpid_header: Option<MpidHeader>,
+    /// Wrapping a full message
+    pub mpid_message: Option<MpidMessage>,
+}

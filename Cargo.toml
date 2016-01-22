@@ -11,3 +11,4 @@ version = "0.0.1"
 
 [dependencies]
 rustc-serialize = "~0.3.16"
+xor_name = "~0.0.1"
