@@ -1,1 +1,1 @@
-initSidebarItems({});
+initSidebarItems({"enum":[["MpidMessageWrapper","Wrapper of a notification or a full message"]],"struct":[["Header","A simple struct holding basic info of the message"],["MpidHeader","To be used as a notification to the receiver"],["MpidMessage","Full message sending/fetching to/from the Network"]]});

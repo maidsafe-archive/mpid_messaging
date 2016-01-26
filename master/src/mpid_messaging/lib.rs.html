@@ -9,6 +9,7 @@
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     <link rel="shortcut icon" href="http://maidsafe.net/img/favicon.ico">
@@ -84,6 +85,45 @@
 <span id="42">42</span>
 <span id="43">43</span>
 <span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -126,9 +166,48 @@
          <span class='ident'>missing_debug_implementations</span>)]</span>
 
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>xor_name</span>;
 
+<span class='kw'>use</span> <span class='ident'>xor_name</span>::<span class='ident'>XorName</span>;
+
+<span class='doccomment'>/// A simple struct holding basic info of the message</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>RustcDecodable</span>, <span class='ident'>RustcEncodable</span>)]</span>
-<span class='kw'>struct</span> <span class='ident'>MpidHeader</span>;
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Header</span> {
+    <span class='doccomment'>/// Sender&#39;s identification</span>
+    <span class='kw'>pub</span> <span class='ident'>sender</span>: <span class='ident'>XorName</span>,
+    <span class='doccomment'>/// Receiver&#39;s identification</span>
+    <span class='kw'>pub</span> <span class='ident'>receiver</span>: <span class='ident'>XorName</span>,
+    <span class='doccomment'>/// Subject field holding generic info of the message</span>
+    <span class='kw'>pub</span> <span class='ident'>subject_field</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
+}
+
+
+<span class='doccomment'>/// To be used as a notification to the receiver</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>RustcDecodable</span>, <span class='ident'>RustcEncodable</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>MpidHeader</span> {
+    <span class='doccomment'>/// Header part of the message</span>
+    <span class='kw'>pub</span> <span class='ident'>msg_header</span>: <span class='ident'>Header</span>,
+    <span class='doccomment'>/// Hash name of the mpid_message that being stored in MpidManager</span>
+    <span class='kw'>pub</span> <span class='ident'>msg_link</span>: <span class='ident'>XorName</span>,
+}
+
+<span class='doccomment'>/// Full message sending/fetching to/from the Network</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>RustcDecodable</span>, <span class='ident'>RustcEncodable</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>MpidMessage</span> {
+    <span class='doccomment'>/// Header part of the message</span>
+    <span class='kw'>pub</span> <span class='ident'>msg_header</span>: <span class='ident'>Header</span>,
+    <span class='doccomment'>/// Content part of the message</span>
+    <span class='kw'>pub</span> <span class='ident'>msg_content</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
+}
+
+<span class='doccomment'>/// Wrapper of a notification or a full message</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>RustcDecodable</span>, <span class='ident'>RustcEncodable</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>MpidMessageWrapper</span> {
+    <span class='doccomment'>/// Wrapping a notification</span>
+    <span class='ident'>MpidHeader</span>(<span class='ident'>MpidHeader</span>),
+    <span class='doccomment'>/// Wrapping a full message</span>
+    <span class='ident'>MpidMessage</span>(<span class='ident'>MpidMessage</span>),
+}
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -189,6 +268,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>
