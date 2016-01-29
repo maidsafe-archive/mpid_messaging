@@ -208,7 +208,7 @@ impl MpidMessage {
     }
 
     /// Help function to verify whether a MpidMessage is valid
-    pub fn verify(&self, public_key: &::sodiumoxide::crypto::sign::PublicKey) -> bool {
+    pub fn verify(&self, public_key: &PublicKey) -> bool {
         let encoded = Self::encode(&self.recipient, &self.body);
         sign::verify_detached(&self.signature, &encoded, public_key) &&
             self.header.verify(public_key)
@@ -249,7 +249,7 @@ pub fn mpid_message_name(mpid_message: &MpidMessage) -> Option<XorName> {
 /// Wrapper of mpid messaging operation
 #[allow(variant_size_differences)]
 #[derive(Clone, Debug, RustcDecodable, RustcEncodable)]
-enum MpidMessageWrapper {
+pub enum MpidMessageWrapper {
     /// Notification that the MPID Client has just connected to the network
     Online,
     /// Client send out an MpidMessage
@@ -266,4 +266,55 @@ enum MpidMessageWrapper {
     GetOutboxHeaders,
     /// The list of headers of all messages in Sender's outbox
     GetOutboxHeadersResponse(Vec<MpidHeader>),
+}
+
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use rand;
+    use sodiumoxide::crypto::sign;
+    use xor_name::XorName;
+
+    fn generate_random_vec<T>(len: usize) -> Vec<T> where T: rand::Rand {
+        let mut vec = Vec::<T>::with_capacity(len);
+        for _ in 0..len {
+            vec.push(rand::random::<T>());
+        }
+        vec
+    }
+
+    #[test]
+    fn mpid_header() {
+        let (public_key, secret_key) = sign::gen_keypair();
+        let sender: XorName = rand::random();
+        let long_metadata : Vec<u8> = generate_random_vec(129);
+        match MpidHeader::new(sender, long_metadata, &secret_key) {
+            Some(_) => panic!("failed in detecting a long metadata when compose a mpid_header"),
+            None => {}
+        }
+        let metadata : Vec<u8> = generate_random_vec(128);
+        match MpidHeader::new(sender, metadata, &secret_key) {
+            Some(mpid_header) => assert!(mpid_header.verify(&public_key)),
+            None => panic!("failed in compose a mpid_header"),
+        }
+    }
+
+    #[test]
+    fn mpid_message() {
+        let (public_key, secret_key) = sign::gen_keypair();
+        let sender: XorName = rand::random();
+        let metadata : Vec<u8> = generate_random_vec(128);
+        let mpid_header = match MpidHeader::new(sender, metadata, &secret_key) {
+            Some(mpid_header) => mpid_header,
+            None => panic!("failed in compose a mpid_header"),
+        };
+        let body : Vec<u8> = generate_random_vec(1024);
+        let receiver: XorName = rand::random();
+        match MpidMessage::new(mpid_header, receiver, body, &secret_key) {
+            Some(mpid_message) => assert!(mpid_message.verify(&public_key)),
+            None => panic!("failed in compose a mpid_message"),
+        }
+    }
+
 }
