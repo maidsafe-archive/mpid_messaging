@@ -10,5 +10,9 @@ repository = "https://github.com/maidsafe/mpid_messaging"
 version = "0.0.1"
 
 [dependencies]
+log = "~0.3.4"
+maidsafe_utilities = "~0.1.5"
+rand = "~0.3.12"
 rustc-serialize = "~0.3.16"
+sodiumoxide = "~0.0.9"
 xor_name = "~0.0.1"
