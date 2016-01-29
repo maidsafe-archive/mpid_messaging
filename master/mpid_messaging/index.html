@@ -46,21 +46,12 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-0' class='srclink' href='../src/mpid_messaging/lib.rs.html#18-83' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-0' class='srclink' href='../src/mpid_messaging/lib.rs.html#18-269' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='mpid-messaging' class='section-header'><a href='#mpid-messaging'>MPID Messaging</a></h1>
 <p>Types used by SAFE Vaults and SAFE Clients to send and receive messages.</p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Header.html'
-                               title='mpid_messaging::Header'>Header</a></td>
-                        <td class='docblock short'>
-                             <p>A simple struct holding basic info of the message</p>
-
-                        </td>
-                    </tr>
-                
                     <tr class=' module-item'>
                         <td><a class='struct' href='struct.MpidHeader.html'
                                title='mpid_messaging::MpidHeader'>MpidHeader</a></td>
@@ -78,13 +69,68 @@
 
                         </td>
                     </tr>
-                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+                </table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
 <table>
                     <tr class=' module-item'>
-                        <td><a class='enum' href='enum.MpidMessageWrapper.html'
-                               title='mpid_messaging::MpidMessageWrapper'>MpidMessageWrapper</a></td>
+                        <td><a class='constant' href='constant.GUID_SIZE.html'
+                               title='mpid_messaging::GUID_SIZE'>GUID_SIZE</a></td>
                         <td class='docblock short'>
-                             <p>Wrapper of a notification or a full message</p>
+                             <p>Length of the GUID (unique id of the header or full message)</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.MAX_BODY_SIZE.html'
+                               title='mpid_messaging::MAX_BODY_SIZE'>MAX_BODY_SIZE</a></td>
+                        <td class='docblock short'>
+                             <p>Maximum allowed size for <code>MpidMessage::msg_body</code></p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.MAX_HEADER_METADATA_SIZE.html'
+                               title='mpid_messaging::MAX_HEADER_METADATA_SIZE'>MAX_HEADER_METADATA_SIZE</a></td>
+                        <td class='docblock short'>
+                             <p>Maximum allowed size for <code>MessageHeader::metadata</code></p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.MAX_INBOX_SIZE.html'
+                               title='mpid_messaging::MAX_INBOX_SIZE'>MAX_INBOX_SIZE</a></td>
+                        <td class='docblock short'>
+                             <p>Maximum allowed inbox size for an account, currently set as 128 MiB</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.MAX_OUTBOX_SIZE.html'
+                               title='mpid_messaging::MAX_OUTBOX_SIZE'>MAX_OUTBOX_SIZE</a></td>
+                        <td class='docblock short'>
+                             <p>Maximum allowed oubox size for an account, currently set as 128 MiB</p>
+
+                        </td>
+                    </tr>
+                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.mpid_header_name.html'
+                               title='mpid_messaging::mpid_header_name'>mpid_header_name</a></td>
+                        <td class='docblock short'>
+                             <p>Help function to calculate the name of a MpidHeader</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.mpid_message_name.html'
+                               title='mpid_messaging::mpid_message_name'>mpid_message_name</a></td>
+                        <td class='docblock short'>
+                             <p>Help function to calculate the name of a MpidHeader</p>
 
                         </td>
                     </tr>
