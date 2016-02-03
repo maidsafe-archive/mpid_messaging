@@ -266,6 +266,10 @@ pub enum MpidMessageWrapper {
     GetOutboxHeaders,
     /// The list of headers of all messages in Sender's outbox
     GetOutboxHeadersResponse(Vec<MpidHeader>),
+    /// Delete message from Client sender's outbox by sender or receiver
+    DeleteMessage(XorName),
+    /// Delete header from Client receiver's inbox
+    DeleteHeader(XorName),
 }
 
 
