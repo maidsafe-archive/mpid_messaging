@@ -1,5 +1,8 @@
 # mpid_messaging - Change Log
 
+## [0.0.4]
+- Add DeleteMessage and DeleteHeader to MpidMessageWrapper
+
 ## [0.0.3]
 - expose MpidMessageWrapper
 - includes basic tests for MpidHeader and MpidMessage
