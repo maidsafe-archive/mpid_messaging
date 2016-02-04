@@ -1,5 +1,15 @@
 # mpid_messaging - Change Log
 
+## [0.1.0]
+- Split structs into their own files
+- Added error enum
+- Replaced `Option`s with `Result`s
+- Improved docs
+- Implemented Debug traits
+- Initialise sodiumoxide safely
+- Expanded tests
+- Added clippy and fixed warnings
+
 ## [0.0.4]
 - Add DeleteMessage and DeleteHeader to MpidMessageWrapper
 
