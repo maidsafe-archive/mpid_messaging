@@ -156,8 +156,10 @@ mod test {
         let sender: XorName = rand::random();
 
         // Check with metadata which is empty, then at size limit, then just above limit.
-        let header = unwrap_result!(MpidHeader::new(sender.clone(), vec![], &secret_key));
-        assert!(header.metadata().is_empty());
+        {
+            let header = unwrap_result!(MpidHeader::new(sender.clone(), vec![], &secret_key));
+            assert!(header.metadata().is_empty());
+        }
         let mut metadata = ::generate_random_bytes(MAX_HEADER_METADATA_SIZE);
         let header = unwrap_result!(MpidHeader::new(sender.clone(), metadata.clone(), &secret_key));
         assert!(*header.metadata() == metadata);
@@ -189,6 +191,8 @@ mod test {
         assert_eq!(header1.metadata(), header2.metadata());
         assert!(header1.guid() != header2.guid());
         assert!(header1.signature() != header2.signature());
-        assert!(unwrap_result!(header1.name()) != unwrap_result!(header2.name()));
+        let name1 = unwrap_result!(header1.name());
+        let name2 = unwrap_result!(header2.name());
+        assert!(name1 != name2);
     }
 }

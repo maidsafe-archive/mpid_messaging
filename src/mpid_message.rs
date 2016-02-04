@@ -140,12 +140,14 @@ mod test {
         let recipient: XorName = rand::random();
 
         // Check with body which is empty, then at size limit, then just above limit.
-        let message = unwrap_result!(MpidMessage::new(sender.clone(),
-                                                      metadata.clone(),
-                                                      recipient.clone(),
-                                                      vec![],
-                                                      &secret_key));
-        assert!(message.body().is_empty());
+        {
+            let message = unwrap_result!(MpidMessage::new(sender.clone(),
+                                                          metadata.clone(),
+                                                          recipient.clone(),
+                                                          vec![],
+                                                          &secret_key));
+            assert!(message.body().is_empty());
+        }
         let mut body = ::generate_random_bytes(MAX_BODY_SIZE);
         let message = unwrap_result!(MpidMessage::new(sender.clone(),
                                                       metadata.clone(),

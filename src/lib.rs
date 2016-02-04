@@ -38,6 +38,11 @@
 #![allow(box_pointers, fat_ptr_transmutes, missing_copy_implementations,
          missing_debug_implementations)]
 
+#![cfg_attr(feature="clippy", feature(plugin))]
+#![cfg_attr(feature="clippy", plugin(clippy))]
+#![cfg_attr(feature="clippy", deny(clippy))]
+#![cfg_attr(feature="clippy", deny(clippy_pedantic))]
+
 #[macro_use]
 extern crate maidsafe_utilities;
 extern crate rand;
