@@ -62,6 +62,29 @@ pub use mpid_header::{MpidHeader, MAX_HEADER_METADATA_SIZE};
 pub use mpid_message::{MpidMessage, MAX_BODY_SIZE};
 pub use mpid_message_wrapper::MpidMessageWrapper;
 
+use std::fmt::Write;
+
+// Format a vector of bytes as a hexadecimal number, ellipsising all but the first and last three.
+//
+// For three bytes with values 1, 2, 3, the output will be "010203".  For more than six bytes, e.g.
+// for fifteen bytes with values 1, 2, ..., 15, the output will be "010203..0d0e0f".
+fn format_binary_array<V: AsRef<[u8]>>(input: V) -> String {
+    let input_ref = input.as_ref();
+    if input_ref.len() <= 6 {
+        let mut ret = String::new();
+        for byte in input_ref.iter() {
+            unwrap_result!(write!(ret, "{:02x}", byte));
+        }
+        return ret;
+    }
+    format!("{:02x}{:02x}{:02x}..{:02x}{:02x}{:02x}",
+            input_ref[0],
+            input_ref[1],
+            input_ref[2],
+            input_ref[input_ref.len() - 3],
+            input_ref[input_ref.len() - 2],
+            input_ref[input_ref.len() - 1])
+}
 
 #[cfg(test)]
 fn generate_random_bytes(size: usize) -> Vec<u8> {

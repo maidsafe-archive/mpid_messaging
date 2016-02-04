@@ -19,14 +19,16 @@
 /// bytes).
 pub const MAX_HEADER_METADATA_SIZE: usize = 128;  // bytes
 
+use std::fmt::{self, Debug, Formatter};
+
 use maidsafe_utilities::serialisation::serialise;
-use sodiumoxide::crypto::hash::sha512;
 use rand::{self, Rng};
+use sodiumoxide::crypto::hash::sha512;
 use sodiumoxide::crypto::sign::{self, PublicKey, SecretKey, Signature};
 use super::{Error, GUID_SIZE};
 use xor_name::XorName;
 
-#[derive(PartialEq, Eq, Hash, Clone, Debug, RustcDecodable, RustcEncodable)]
+#[derive(PartialEq, Eq, Hash, Clone, RustcDecodable, RustcEncodable)]
 struct Detail {
     sender: XorName,
     guid: [u8; GUID_SIZE],
@@ -34,7 +36,7 @@ struct Detail {
 }
 
 /// Minimal information about a given message which can be used as a notification to the receiver.
-#[derive(PartialEq, Eq, Hash, Clone, Debug, RustcDecodable, RustcEncodable)]
+#[derive(PartialEq, Eq, Hash, Clone, RustcDecodable, RustcEncodable)]
 pub struct MpidHeader {
     detail: Detail,
     signature: Signature,
@@ -111,6 +113,17 @@ impl MpidHeader {
             Ok(encoded) => sign::verify_detached(&self.signature, &encoded, public_key),
             Err(_) => false
         }
+    }
+}
+
+impl Debug for MpidHeader {
+    fn fmt(&self, formatter: &mut Formatter) -> Result<(), fmt::Error> {
+        write!(formatter,
+               "MpidHeader {{ sender: {:?}, guid: {}, metadata: {}, signature: {} }}",
+               self.detail.sender,
+               ::format_binary_array(&self.detail.guid),
+               ::format_binary_array(&self.detail.metadata),
+               ::format_binary_array(&self.signature))
     }
 }
 

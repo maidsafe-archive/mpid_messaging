@@ -23,7 +23,7 @@ use xor_name::XorName;
 
 /// A serialisable wrapper to allow multiplexing all MPID message types and actions via a single
 /// type.
-#[derive(Clone, Debug, RustcDecodable, RustcEncodable)]
+#[derive(PartialEq, Eq, Hash, Clone, Debug, RustcDecodable, RustcEncodable)]
 pub enum MpidMessageWrapper {
     /// Sent by a Client to its MpidManagers to notify them that it has just connected to the
     /// network.

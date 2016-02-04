@@ -19,19 +19,21 @@
 /// bytes).
 pub const MAX_BODY_SIZE: usize = 102400 - 512 - super::MAX_HEADER_METADATA_SIZE;
 
+use std::fmt::{self, Debug, Formatter};
+
 use maidsafe_utilities::serialisation::serialise;
 use sodiumoxide::crypto::sign::{self, PublicKey, SecretKey, Signature};
 use super::{Error, MpidHeader};
 use xor_name::XorName;
 
-#[derive(PartialEq, Eq, Hash, Clone, Debug, RustcDecodable, RustcEncodable)]
+#[derive(PartialEq, Eq, Hash, Clone, RustcDecodable, RustcEncodable)]
 struct Detail {
     recipient: XorName,
     body: Vec<u8>,
 }
 
 /// A full message including header and body which can be sent to or retrieved from the network.
-#[derive(PartialEq, Eq, Hash, Clone, Debug, RustcDecodable, RustcEncodable)]
+#[derive(PartialEq, Eq, Hash, Clone, RustcDecodable, RustcEncodable)]
 pub struct MpidMessage {
     header: MpidHeader,
     detail: Detail,
@@ -109,6 +111,17 @@ impl MpidMessage {
             }
             Err(_) => false
         }
+    }
+}
+
+impl Debug for MpidMessage {
+    fn fmt(&self, formatter: &mut Formatter) -> Result<(), fmt::Error> {
+        write!(formatter,
+               "MpidMessage {{ header: {:?}, recipient: {:?}, body: {}, signature: {} }}",
+               self.header,
+               self.detail.recipient,
+               ::format_binary_array(&self.detail.body),
+               ::format_binary_array(&self.signature))
     }
 }
 
