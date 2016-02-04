@@ -46,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-0' class='srclink' href='../src/mpid_messaging/lib.rs.html#18-324' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-0' class='srclink' href='../src/mpid_messaging/lib.rs.html#18-97' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='mpid-messaging' class='section-header'><a href='#mpid-messaging'>MPID Messaging</a></h1>
 <p>Types used by SAFE Vaults and SAFE Clients to send and receive messages.</p>
@@ -56,7 +56,7 @@
                         <td><a class='struct' href='struct.MpidHeader.html'
                                title='mpid_messaging::MpidHeader'>MpidHeader</a></td>
                         <td class='docblock short'>
-                             <p>To be used as a notification to the receiver</p>
+                             <p>Minimal information about a given message which can be used as a notification to the receiver.</p>
 
                         </td>
                     </tr>
@@ -65,17 +65,27 @@
                         <td><a class='struct' href='struct.MpidMessage.html'
                                title='mpid_messaging::MpidMessage'>MpidMessage</a></td>
                         <td class='docblock short'>
-                             <p>Full message sending/fetching to/from the Network</p>
+                             <p>A full message including header and body which can be sent to or retrieved from the network.</p>
 
                         </td>
                     </tr>
                 </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                     <tr class=' module-item'>
+                        <td><a class='enum' href='enum.Error.html'
+                               title='mpid_messaging::Error'>Error</a></td>
+                        <td class='docblock short'>
+                             <p>Error types relating to MPID messaging.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
                         <td><a class='enum' href='enum.MpidMessageWrapper.html'
                                title='mpid_messaging::MpidMessageWrapper'>MpidMessageWrapper</a></td>
                         <td class='docblock short'>
-                             <p>Wrapper of mpid messaging operation</p>
+                             <p>A serialisable wrapper to allow multiplexing all MPID message types and actions via a single
+type.</p>
 
                         </td>
                     </tr>
@@ -85,7 +95,7 @@
                         <td><a class='constant' href='constant.GUID_SIZE.html'
                                title='mpid_messaging::GUID_SIZE'>GUID_SIZE</a></td>
                         <td class='docblock short'>
-                             <p>Length of the GUID (unique id of the header or full message)</p>
+                             <p>Length of the GUID (unique ID) of a message (16 bytes).</p>
 
                         </td>
                     </tr>
@@ -94,7 +104,8 @@
                         <td><a class='constant' href='constant.MAX_BODY_SIZE.html'
                                title='mpid_messaging::MAX_BODY_SIZE'>MAX_BODY_SIZE</a></td>
                         <td class='docblock short'>
-                             <p>Maximum allowed size for <code>MpidMessage::msg_body</code></p>
+                             <p>Maximum allowed length for a <a href="struct.MpidMessage.html#method.new">message&#39;s <code>body</code></a> (101,760
+bytes).</p>
 
                         </td>
                     </tr>
@@ -103,7 +114,8 @@
                         <td><a class='constant' href='constant.MAX_HEADER_METADATA_SIZE.html'
                                title='mpid_messaging::MAX_HEADER_METADATA_SIZE'>MAX_HEADER_METADATA_SIZE</a></td>
                         <td class='docblock short'>
-                             <p>Maximum allowed size for <code>MessageHeader::metadata</code></p>
+                             <p>Maximum allowed length for a <a href="struct.MpidHeader.html#method.new">header&#39;s <code>metadata</code></a> (128
+bytes).</p>
 
                         </td>
                     </tr>
@@ -112,7 +124,7 @@
                         <td><a class='constant' href='constant.MAX_INBOX_SIZE.html'
                                title='mpid_messaging::MAX_INBOX_SIZE'>MAX_INBOX_SIZE</a></td>
                         <td class='docblock short'>
-                             <p>Maximum allowed inbox size for an account, currently set as 128 MiB</p>
+                             <p>Maximum allowed inbox size for an account (128 MiB).</p>
 
                         </td>
                     </tr>
@@ -121,26 +133,7 @@
                         <td><a class='constant' href='constant.MAX_OUTBOX_SIZE.html'
                                title='mpid_messaging::MAX_OUTBOX_SIZE'>MAX_OUTBOX_SIZE</a></td>
                         <td class='docblock short'>
-                             <p>Maximum allowed oubox size for an account, currently set as 128 MiB</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
-<table>
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.mpid_header_name.html'
-                               title='mpid_messaging::mpid_header_name'>mpid_header_name</a></td>
-                        <td class='docblock short'>
-                             <p>Help function to calculate the name of a MpidHeader</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.mpid_message_name.html'
-                               title='mpid_messaging::mpid_message_name'>mpid_message_name</a></td>
-                        <td class='docblock short'>
-                             <p>Help function to calculate the name of a MpidHeader</p>
+                             <p>Maximum allowed outbox size for an account (128 MiB).</p>
 
                         </td>
                     </tr>
