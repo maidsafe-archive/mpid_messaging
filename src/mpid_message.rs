@@ -67,13 +67,13 @@ impl MpidMessage {
 
         let header = try!(MpidHeader::new(sender, metadata, secret_key));
 
-        let detail = Detail{
+        let detail = Detail {
             recipient: recipient,
             body: body,
         };
 
         let recipient_and_body = try!(serialise(&detail));
-        Ok(MpidMessage{
+        Ok(MpidMessage {
             header: header,
             detail: detail,
             signature: sign::sign_detached(&recipient_and_body, secret_key),
@@ -107,9 +107,9 @@ impl MpidMessage {
         match serialise(&self.detail) {
             Ok(recipient_and_body) => {
                 sign::verify_detached(&self.signature, &recipient_and_body, public_key) &&
-                    self.header.verify(public_key)
+                self.header.verify(public_key)
             }
-            Err(_) => false
+            Err(_) => false,
         }
     }
 }
@@ -133,17 +133,42 @@ mod test {
     use xor_name::XorName;
 
     #[test]
-    fn mpid_message() {
-        let (public_key, secret_key) = sign::gen_keypair();
+    fn full() {
+        let (mut public_key, secret_key) = sign::gen_keypair();
         let sender: XorName = rand::random();
-        let metadata = ::generate_random_bytes(128);
-        let mpid_header = unwrap_result!(::MpidHeader::new(sender.clone(), metadata.clone(), &secret_key));
-        let body = ::generate_random_bytes(1024);
-        let receiver: XorName = rand::random();
-        let mpid_message = unwrap_result!(MpidMessage::new(sender.clone(), metadata.clone(), receiver, body, &secret_key));
-        assert!(mpid_message.verify(&public_key));
-        assert_eq!(mpid_message.header().sender(), mpid_header.sender());
-        assert_eq!(mpid_message.header().metadata(), mpid_header.metadata());
-        assert!(mpid_message.header().guid() != mpid_header.guid());
+        let metadata = ::generate_random_bytes(::MAX_HEADER_METADATA_SIZE);
+        let recipient: XorName = rand::random();
+
+        // Check with body which is empty, then at size limit, then just above limit.
+        let message = unwrap_result!(MpidMessage::new(sender.clone(),
+                                                      metadata.clone(),
+                                                      recipient.clone(),
+                                                      vec![],
+                                                      &secret_key));
+        assert!(message.body().is_empty());
+        let mut body = ::generate_random_bytes(MAX_BODY_SIZE);
+        let message = unwrap_result!(MpidMessage::new(sender.clone(),
+                                                      metadata.clone(),
+                                                      recipient.clone(),
+                                                      body.clone(),
+                                                      &secret_key));
+        assert!(*message.body() == body);
+        body.push(0);
+        assert!(MpidMessage::new(sender.clone(),
+                                 metadata.clone(),
+                                 recipient.clone(),
+                                 body.clone(),
+                                 &secret_key)
+                    .is_err());
+        let _ = body.pop();
+
+        // Check verify function with a valid and invalid key
+        assert!(message.verify(&public_key));
+        if public_key.0[0] == 255 {
+            public_key.0[0] += 1;
+        } else {
+            public_key.0[0] = 0;
+        }
+        assert!(!message.verify(&public_key));
     }
 }

@@ -72,7 +72,7 @@ impl MpidHeader {
             return Err(Error::MetadataTooLarge);
         }
 
-        let mut detail = Detail{
+        let mut detail = Detail {
             sender: sender,
             guid: [0u8; GUID_SIZE],
             metadata: metadata,
@@ -80,7 +80,7 @@ impl MpidHeader {
         rand::thread_rng().fill_bytes(&mut detail.guid);
 
         let encoded = try!(serialise(&detail));
-        Ok(MpidHeader{
+        Ok(MpidHeader {
             detail: detail,
             signature: sign::sign_detached(&encoded, secret_key),
         })
@@ -117,7 +117,7 @@ impl MpidHeader {
     pub fn verify(&self, public_key: &PublicKey) -> bool {
         match serialise(&self.detail) {
             Ok(encoded) => sign::verify_detached(&self.signature, &encoded, public_key),
-            Err(_) => false
+            Err(_) => false,
         }
     }
 
@@ -151,13 +151,44 @@ mod test {
     use xor_name::XorName;
 
     #[test]
-    fn mpid_header() {
-        let (public_key, secret_key) = sign::gen_keypair();
+    fn full() {
+        let (mut public_key, secret_key) = sign::gen_keypair();
         let sender: XorName = rand::random();
-        let long_metadata = ::generate_random_bytes(129);
-        assert!(MpidHeader::new(sender, long_metadata, &secret_key).is_err());
-        let metadata = ::generate_random_bytes(128);
-        let mpid_header = unwrap_result!(MpidHeader::new(sender, metadata, &secret_key));
-        assert!(mpid_header.verify(&public_key));
+
+        // Check with metadata which is empty, then at size limit, then just above limit.
+        let header = unwrap_result!(MpidHeader::new(sender.clone(), vec![], &secret_key));
+        assert!(header.metadata().is_empty());
+        let mut metadata = ::generate_random_bytes(MAX_HEADER_METADATA_SIZE);
+        let header = unwrap_result!(MpidHeader::new(sender.clone(), metadata.clone(), &secret_key));
+        assert!(*header.metadata() == metadata);
+        metadata.push(0);
+        assert!(MpidHeader::new(sender.clone(), metadata.clone(), &secret_key).is_err());
+        let _ = metadata.pop();
+
+        // Check verify function with a valid and invalid key
+        assert!(header.verify(&public_key));
+        if public_key.0[0] == 255 {
+            public_key.0[0] += 1;
+        } else {
+            public_key.0[0] = 0;
+        }
+        assert!(!header.verify(&public_key));
+
+        // Check that identically-constructed headers retain identical sender and metadata, but have
+        // different GUIDs and signatures.
+        let header1 = unwrap_result!(MpidHeader::new(sender.clone(),
+                                                     metadata.clone(),
+                                                     &secret_key));
+        let header2 = unwrap_result!(MpidHeader::new(sender.clone(),
+                                                     metadata.clone(),
+                                                     &secret_key));
+        assert!(header1 != header2);
+        assert_eq!(*header1.sender(), sender);
+        assert_eq!(header1.sender(), header2.sender());
+        assert_eq!(*header1.metadata(), metadata);
+        assert_eq!(header1.metadata(), header2.metadata());
+        assert!(header1.guid() != header2.guid());
+        assert!(header1.signature() != header2.signature());
+        assert!(unwrap_result!(header1.name()) != unwrap_result!(header2.name()));
     }
 }
