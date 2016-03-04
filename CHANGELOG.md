@@ -1,5 +1,8 @@
 # mpid_messaging - Change Log
 
+## [0.2.0]
+- Updated dependencies
+
 ## [0.1.0]
 - Split structs into their own files
 - Added error enum

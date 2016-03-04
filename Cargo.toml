@@ -7,12 +7,12 @@ license = "GPL-3.0"
 name = "mpid_messaging"
 readme = "README.md"
 repository = "https://github.com/maidsafe/mpid_messaging"
-version = "0.1.0"
+version = "0.2.0"
 
 [dependencies]
-clippy = {version = "~0.0.44", optional = true}
-maidsafe_utilities = "~0.2.1"
+clippy = {version = "~0.0.46", optional = true}
+maidsafe_utilities = "~0.4.0"
 rand = "~0.3.14"
 rustc-serialize = "~0.3.18"
 sodiumoxide = "~0.0.9"
-xor_name = "~0.0.4"
+xor_name = "~0.1.0"
